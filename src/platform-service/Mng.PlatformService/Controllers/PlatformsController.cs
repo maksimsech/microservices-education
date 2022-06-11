@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mng.PlatformService.Data;
 using Mng.PlatformService.Data.Models;
 using Mng.PlatformService.DataContracts;
+using Mng.PlatformService.Services.DataSync;
 
 namespace Mng.PlatformService.Controllers;
 
@@ -13,11 +14,20 @@ public class PlatformController : ControllerBase
 {
     private readonly PlatformContext _context;
     private readonly IMapper _mapper;
+    private readonly ICommandSyncService _commandSyncService;
+    private readonly ILogger<PlatformController> _logger;
 
-    public PlatformController(PlatformContext context, IMapper mapper)
+    public PlatformController(
+        PlatformContext context,
+        IMapper mapper,
+        ICommandSyncService commandSyncService, 
+        ILogger<PlatformController> logger
+    )
     {
         _context = context;
         _mapper = mapper;
+        _commandSyncService = commandSyncService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -51,6 +61,15 @@ public class PlatformController : ControllerBase
         await _context.SaveChangesAsync();
 
         var platformDataContract = _mapper.Map<PlatformReadDataContract>(platform);
+
+        try
+        {
+            await _commandSyncService.SendPlatformAsync(platformDataContract);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Could not sync command service");
+        }
 
         return CreatedAtAction(nameof(GetById), new { id = platformDataContract.Id }, platform);
     }
