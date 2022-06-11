@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: platform-deployment
+  name: command-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: platform-service
+      app: command-service
   template:
     metadata:
       labels:
-        app: platform-service
+        app: command-service
     spec:
       containers:
-        - name: platform-service
-          image: maksimsech/platform-service:latest
+        - name: command-service
+          image: maksimsech/command-service:latest
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: platform-clusterip-service
+  name: command-clusterip-service
 spec:
   type: ClusterIP
   selector:
-    app: platform-service
+    app: command-service
   ports:
   - name: default
     protocol: TCP

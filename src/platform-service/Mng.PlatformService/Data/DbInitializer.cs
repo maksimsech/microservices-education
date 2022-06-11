@@ -11,7 +11,10 @@ public static class DbInitializer
         var context = scope.ServiceProvider.GetRequiredService<PlatformContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<PlatformContext>>();
 
-        // context.Database.Migrate();
+        if (context.Database.IsRelational())
+        {
+            context.Database.Migrate();
+        }
         SeedData(context, logger);
     }
 

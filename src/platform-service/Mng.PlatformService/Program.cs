@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Mng.PlatformService;
 using Mng.PlatformService.Data;
+using Mng.PlatformService.Options;
+using Mng.PlatformService.Services.DataSync;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddOptions<HttpCommandSyncServiceOptions>()
+    .Bind(builder.Configuration.GetSection(HttpCommandSyncServiceOptions.SectionName));
+
+builder.Services.AddHttpClient<HttpCommandSyncService>();
+
+builder.Services.AddTransient<ICommandSyncService>(sp => sp.GetRequiredService<HttpCommandSyncService>());
 
 builder.Services.AddMapser();
 
