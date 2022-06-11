@@ -1,0 +1,1 @@
+Test project to try k8s and events based stuff w/o any best practices and good code.
