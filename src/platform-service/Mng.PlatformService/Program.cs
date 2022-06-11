@@ -8,7 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<PlatformContext>(o => o.UseInMemoryDatabase(nameof(PlatformContext)));
+builder.Services.AddDbContext<PlatformContext>(o =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        o.UseInMemoryDatabase(nameof(PlatformContext));
+    }
+    else
+    {
+        var connectionStringOptions = builder.Configuration.GetSection(SqlConnectionStringOptions.SectionName).Get<SqlConnectionStringOptions>();
+        var connectionString = $"Server={connectionStringOptions.Server};Database=PlatformService;User ID={connectionStringOptions.UserId};Password={connectionStringOptions.Password}";
+        o.UseSqlServer(connectionString);
+    }
+});
 
 builder.Services.AddControllers();
 
