@@ -1,11 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Mng.CommandService;
+using Mng.CommandService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<CommandContext>(o => o.UseInMemoryDatabase(nameof(CommandContext)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddMapser();
 
 var app = builder.Build();
 
