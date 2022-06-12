@@ -16,6 +16,11 @@ spec:
         - name: platform-service
           image: maksimsech/platform-service:latest
           env:
+          - name: HttpCommandSyncService_BaseAddress
+            valueFrom:
+              configMapKeyRef:
+                name: command-configmap
+                key: base-url
           - name: SqlConnectionString__Server
             valueFrom:
               configMapKeyRef:
