@@ -6,7 +6,7 @@ namespace Mng.PlatformService.Data;
 
 public class PlatformContext : DbContext
 {
-    public DbSet<Platform> Platforms { get; set; } = null!;
+    public DbSet<Platform> Platforms { get; init; } = null!;
 
 
     public PlatformContext(DbContextOptions<PlatformContext> options) : base(options)
