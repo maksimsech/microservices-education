@@ -15,6 +15,17 @@ spec:
       containers:
         - name: command-service
           image: maksimsech/command-service:latest
+          env:
+          - name: RabbitMq__Host
+            valueFrom:
+              configMapKeyRef:
+                name: rabbitmq-configmap
+                key: host
+          - name: RabbitMq__Port
+            valueFrom:
+              configMapKeyRef:
+                name: rabbitmq-configmap
+                key: port
 ---
 apiVersion: v1
 kind: Service

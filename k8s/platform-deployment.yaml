@@ -33,6 +33,16 @@ spec:
               secretKeyRef:
                 name: mssql-secret
                 key: sa-password
+          - name: RabbitMq__Host
+            valueFrom:
+              configMapKeyRef:
+                name: rabbitmq-configmap
+                key: host
+          - name: RabbitMq__Port
+            valueFrom:
+              configMapKeyRef:
+                name: rabbitmq-configmap
+                key: port
 ---
 apiVersion: v1
 kind: Service

@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
         // Verify if it how it should look
         config.NewConfig<Platform, PlatformCreateDataContract>();
         config.NewConfig<Platform, PlatformReadDataContract>();
+        config.NewConfig<Platform, PlatformPublishedDataContract>();
 
         serviceCollection.AddSingleton(config);
         serviceCollection.AddScoped<IMapper, ServiceMapper>();
