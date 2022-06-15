@@ -5,6 +5,7 @@ using Mng.PlatformService.Data;
 using Mng.PlatformService.Data.Models;
 using Mng.PlatformService.DataContracts;
 using Mng.PlatformService.Services.DataSync;
+using Mng.PlatformService.Services.Events;
 
 namespace Mng.PlatformService.Controllers;
 
@@ -15,18 +16,21 @@ public class PlatformController : ControllerBase
     private readonly PlatformContext _context;
     private readonly IMapper _mapper;
     private readonly ICommandSyncService _commandSyncService;
+    private readonly IMessageBusService _messageBusService;
     private readonly ILogger<PlatformController> _logger;
 
     public PlatformController(
         PlatformContext context,
         IMapper mapper,
-        ICommandSyncService commandSyncService, 
+        ICommandSyncService commandSyncService,
+        IMessageBusService messageBusService,
         ILogger<PlatformController> logger
     )
     {
         _context = context;
         _mapper = mapper;
         _commandSyncService = commandSyncService;
+        _messageBusService = messageBusService;
         _logger = logger;
     }
 
@@ -69,6 +73,16 @@ public class PlatformController : ControllerBase
         catch (Exception e)
         {
             _logger.LogWarning(e, "Could not sync command service");
+        }
+
+        try
+        {
+            var platformPublishedDataContract = _mapper.Map<PlatformPublishedDataContract>(platform);
+            await _messageBusService.PublishPlatformPublishedAsync(platformPublishedDataContract);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Could not send platform created");
         }
 
         return CreatedAtAction(nameof(GetById), new { id = platformDataContract.Id }, platform);

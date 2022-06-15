@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Mng.PlatformService;
 using Mng.PlatformService.Data;
 using Mng.PlatformService.Options;
 using Mng.PlatformService.Services.DataSync;
+using Mng.PlatformService.Services.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,7 @@ builder.Services.AddDbContext<PlatformContext>(o =>
     }
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,9 +33,14 @@ builder.Services
     .AddOptions<HttpCommandSyncServiceOptions>()
     .Bind(builder.Configuration.GetSection(HttpCommandSyncServiceOptions.SectionName));
 
-builder.Services.AddHttpClient<HttpCommandSyncService>();
+builder.Services
+    .AddOptions<RabbitMqMessageBusServiceOptions>()
+    .Bind(builder.Configuration.GetSection(RabbitMqMessageBusServiceOptions.SectionName));
 
+builder.Services.AddHttpClient<HttpCommandSyncService>();
 builder.Services.AddTransient<ICommandSyncService>(sp => sp.GetRequiredService<HttpCommandSyncService>());
+
+builder.Services.AddSingleton<IMessageBusService, RabbitMqMessageBusService>();
 
 builder.Services.AddMapser();
 

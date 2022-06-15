@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mng.CommandService;
 using Mng.CommandService.Data;
+using Mng.CommandService.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CommandContext>(o => o.UseInMemoryDatabase(nameof(CommandContext)));
 
+builder.Services.AddOptions<RabbitMqOptions>().Bind(builder.Configuration.GetSection(RabbitMqOptions.SectionName));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMapser();
+builder.Services
+    .AddMapser()
+    .AddPlatformEvents();
 
 var app = builder.Build();
 
