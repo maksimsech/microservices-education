@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CommandContext>(o => o.UseInMemoryDatabase(nameof(CommandContext)));
 
 builder.Services.AddOptions<RabbitMqOptions>().Bind(builder.Configuration.GetSection(RabbitMqOptions.SectionName));
+builder.Services.AddOptions<GrpcOptions>().Bind(builder.Configuration.GetSection(GrpcOptions.SectionName));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -18,9 +19,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddMapser()
-    .AddPlatformEvents();
+    .AddPlatformEvents()
+    .AddPlatformGrpcClient();
 
 var app = builder.Build();
+
+app.UseDbInitializer();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

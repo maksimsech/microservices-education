@@ -1,10 +1,16 @@
 ﻿using System.Text.Json;
 using Mapster;
 using MapsterMapper;
+using Microsoft.Extensions.Options;
 using Mng.CommandService.Data.Models;
 using Mng.CommandService.DataContracts;
 using Mng.CommandService.DataContracts.PlatformService;
 using Mng.CommandService.Events.Platform;
+using Mng.CommandService.Grpc;
+using Mng.CommandService.Options;
+using Mng.CommandService.Services;
+using GrpcPlatform = Mng.CommandService.Grpc.Platform;
+using Platform = Mng.CommandService.Data.Models.Platform;
 
 namespace Mng.CommandService;
 
@@ -21,6 +27,9 @@ public static class ServiceCollectionExtensions
         config.NewConfig<PlatformPublishedDataContract, Platform>()
             .Map(d => d.ExternalId, s => s.Id)
             .Ignore(s => s.Id);
+        config.NewConfig<GrpcPlatform, Platform>()
+            .Map(d => d.ExternalId, s => s.Id)
+            .Ignore(s => s.Id);
 
         configure?.Invoke(config);
 
@@ -35,6 +44,19 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddHostedService<PlatformEventsSubscriber>();
         serviceCollection.AddSingleton<PlatformEventMessageHandler>();
         serviceCollection.AddScoped<PlatformEventHandler>();
+
+        return serviceCollection;
+    }
+
+    public static IServiceCollection AddPlatformGrpcClient(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<IPlatformService, GrpcPlatformService>();
+
+        serviceCollection.AddGrpcClient<Platforms.PlatformsClient>((services, options) =>
+        {
+            var platformUri = services.GetRequiredService<IOptions<GrpcOptions>>().Value.Platform;
+            options.Address = new Uri(platformUri);
+        });
 
         return serviceCollection;
     }

@@ -26,6 +26,11 @@ spec:
               configMapKeyRef:
                 name: rabbitmq-configmap
                 key: port
+          - name: Grpc__Platform
+            valueFrom:
+              configMapKeyRef:
+                name: platform-configmap
+                key: grpc-uri
 ---
 apiVersion: v1
 kind: Service
@@ -40,3 +45,4 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
+  

@@ -6,12 +6,11 @@ namespace Mng.CommandService.Events.Platform;
 
 public class PlatformEventMessageHandler
 {
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new (JsonSerializerDefaults.Web)
     {
         Converters = { new JsonStringEnumConverter() },
     };
 
-    
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<PlatformEventMessageHandler> _logger;
 

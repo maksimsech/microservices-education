@@ -11,7 +11,7 @@ namespace Mng.PlatformService.Services.Events;
 
 public class RabbitMqMessageBusService : IMessageBusService, IDisposable
 {
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new (JsonSerializerDefaults.Web)
     {
         Converters = { new JsonStringEnumConverter() },
     };
