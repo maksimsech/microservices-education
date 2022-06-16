@@ -15,6 +15,8 @@ spec:
       containers:
         - name: platform-service
           image: maksimsech/platform-service:latest
+          ports:
+          - containerPort: 81
           env:
           - name: HttpCommandSyncService_BaseAddress
             valueFrom:
@@ -43,6 +45,16 @@ spec:
               configMapKeyRef:
                 name: rabbitmq-configmap
                 key: port
+          - name: Ports__Http
+            valueFrom:
+              configMapKeyRef:
+                name: platform-configmap
+                key: http-port
+          - name: Ports__Grpc
+            valueFrom:
+              configMapKeyRef:
+                name: platform-configmap
+                key: grpc-port
 ---
 apiVersion: v1
 kind: Service
@@ -57,3 +69,7 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
+  - name: grpc
+    protocol: TCP
+    port: 81
+    targetPort: 81
