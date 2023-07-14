@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: platform-configmap
+  name: command-configmap
   namespace: yaml
 data:
   http-port: '80'
   grpc-port: '81'
-  grpc-uri: 'http://platform-clusterip-service:81'
+  base-url: 'http://command-clusterip-service'

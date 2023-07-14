@@ -10,20 +10,18 @@ metadata:
     name: ingress-service
 spec:
   rules:
-  - host: platforms.mng-microservice-education.net
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /platforms
         pathType: Prefix
         backend:
           service:
             name: platform-clusterip-service
             port:
               number: 80
-  - host: commands.mng-microservice-education.net
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /commands
         pathType: Prefix
         backend:
           service:

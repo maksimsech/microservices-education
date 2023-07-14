@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: platform-nodeport-service
+  namespace: yaml
 spec:
   type: NodePort
   selector:

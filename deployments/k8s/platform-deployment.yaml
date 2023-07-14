@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: platform-deployment
+  namespace: yaml
 spec:
   replicas: 1
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: platform-service
-          image: maksimsech/platform-service:latest
+          image: maksimsech/platform-service:latest-arm
           ports:
           - containerPort: 81
           env:
@@ -60,6 +61,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: platform-clusterip-service
+  namespace: yaml
 spec:
   type: ClusterIP
   selector:
