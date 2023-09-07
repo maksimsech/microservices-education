@@ -1,1 +1,1 @@
-Test project to try k8s and events based stuff w/o any best practices and good code.
+Test project to check k8s w/o any best practices and good code.

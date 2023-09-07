@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: command-deployment
+  namespace: yaml
 spec:
   replicas: 1
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: command-service
-          image: maksimsech/command-service:latest
+          image: maksimsech/command-service:latest-arm
           env:
           - name: RabbitMq__Host
             valueFrom:
@@ -36,6 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: command-clusterip-service
+  namespace: yaml
 spec:
   type: ClusterIP
   selector:
